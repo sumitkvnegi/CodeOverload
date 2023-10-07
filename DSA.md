@@ -15,6 +15,117 @@ In JavaScript, arrays are a bit more flexible than the definition above mentione
 * Sparse Arrays: JavaScript arrays can be sparse, meaning they may have "holes" where certain indices do not contain elements. This is not typical for arrays in some other programming languages.
 * Object-like Behavior: JavaScript arrays are essentially objects with some array-specific behavior. They can have additional properties and methods beyond those found in a typical fixed-size array.
 
+## What is a linked list?
+
+A linked list is a data structure in which each element, called a node, contains a value and a reference to the next node in the sequence. Unlike arrays, linked lists do not require contiguous memory allocation, allowing for efficient insertion and deletion operations. However, accessing elements in a linked list requires traversing the list from the beginning.
+
+> In JavaScript, you can create a linked list using objects to represent nodes and define methods to perform common linked list operations. Here's a simple implementation of a singly linked list:
+
+```javascript
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+  }
+
+  // Append a node to the end of the linked list
+  append(data) {
+    const newNode = new Node(data);
+
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+  }
+
+  // Prepend a node to the beginning of the linked list
+  prepend(data) {
+    const newNode = new Node(data);
+
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+  }
+
+  // Delete the first node with the given data from the linked list
+  delete(data) {
+    if (!this.head) {
+      return;
+    }
+
+    if (this.head.data === data) {
+      this.head = this.head.next;
+      if (!this.head) {
+        this.tail = null;
+      }
+      return;
+    }
+
+    let current = this.head;
+    while (current.next) {
+      if (current.next.data === data) {
+        current.next = current.next.next;
+        if (!current.next) {
+          this.tail = current;
+        }
+        return;
+      }
+      current = current.next;
+    }
+  }
+
+  // Print the linked list as an array
+  toArray() {
+    const result = [];
+    let current = this.head;
+    while (current) {
+      result.push(current.data);
+      current = current.next;
+    }
+    return result;
+  }
+}
+
+// Example usage:
+
+const myLinkedList = new LinkedList();
+
+myLinkedList.append(1);
+myLinkedList.append(2);
+myLinkedList.prepend(0);
+myLinkedList.append(3);
+
+console.log(myLinkedList.toArray()); // Output: [0, 1, 2, 3]
+
+myLinkedList.delete(1);
+console.log(myLinkedList.toArray()); // Output: [0, 2, 3]
+```
+
+In this example:
+
+- The `Node` class represents a single node in the linked list, containing `data` and a reference to the `next` node.
+- The `LinkedList` class represents the linked list itself, with methods to `append`, `prepend`, `delete`, and `toArray`.
+- The `append` method adds a node to the end of the list.
+- The `prepend` method adds a node to the beginning of the list.
+- The `delete` method removes the first occurrence of a node with the given data.
+- The `toArray` method converts the linked list to an array for easy printing.
+
+> This is a basic implementation of a singly linked list in JavaScript. You can extend this structure to support other operations or implement a doubly linked list if needed.
+
 ## What is a stack?
 
 A stack is an abstract data type that follows the Last-In-First-Out (LIFO) principle. It supports two main operations: push (inserting an element onto the top of the stack) and pop (removing the topmost element from the stack). Stacks are often used for managing function calls, expression evaluation, and undo mechanisms
@@ -179,3 +290,90 @@ In this example, we've defined two classes: `TreeNode` and `BinaryTree`.
 > You can insert values into the binary tree using the `insert` method, and you can perform an in-order traversal to get the values in sorted order using the `inOrderTraversal` method.
 
 > This is a simple example of a binary tree in JavaScript. Depending on your needs, you can extend this structure to support more complex tree structures or different types of trees (e.g., AVL trees, Red-Black trees) by adding additional methods and properties.
+
+## What is a graph?
+
+A graph is a non-linear data structure consisting of nodes (vertices) and edges that connect them. It is a powerful tool for representing relationships between objects. Graphs can be directed (edges have a specific direction) or undirected (edges have no
+direction). They are widely used in network analysis, social networks, and pathfinding algorithms.
+
+#### Here are some key concepts and terms related to graphs:
+
+1. **Node (Vertex):** Each element in a graph is called a node or vertex. Nodes can represent entities, objects, or locations, depending on the application.
+2. **Edge:** An edge is a connection between two nodes. Edges can be directed (with a specific direction from one node to another) or undirected (bidirectional, without a specified direction).
+3. **Directed Graph (Digraph):** In a directed graph, edges have a direction, meaning they go from one node to another. It represents relationships where direction matters, such as one-way streets or social media following.
+4. **Undirected Graph:** In an undirected graph, edges have no direction and represent symmetric relationships, such as friendships in a social network.
+5. **Weighted Graph:** A weighted graph assigns a numerical weight or cost to each edge, representing the cost, distance, or some other attribute associated with traveling from one node to another.
+6. **Cycle:** A cycle is a path that starts and ends at the same node, following a sequence of edges.
+7. **Connected Graph:** A graph is connected if there is a path between every pair of nodes. If not, it is considered disconnected.
+8. **Graph Traversal:** Graph traversal involves visiting nodes and edges in a graph systematically. Common traversal algorithms include depth-first search (DFS) and breadth-first search (BFS).
+9. **Adjacency Matrix:** An adjacency matrix is a 2D array where the presence or absence of an edge between two nodes is represented by a 1 or 0, respectively. In weighted graphs, the matrix contains edge weights.
+10. **Adjacency List:** An adjacency list is a data structure that represents a graph as a collection of lists. Each node has a list of its neighboring nodes (adjacent nodes).
+11. **Tree:** A tree is a specific type of graph with no cycles. It is often used for hierarchical data representation.
+
+> Graphs can be implemented in various programming languages, including JavaScript, using objects, arrays, or other data structures to represent nodes and edges. The choice of representation depends on the specific requirements and operations needed for your application.
+
+> In JavaScript, you can implement a graph data structure using various approaches, such as an adjacency list or an adjacency matrix. Below, I'll provide an example of how to create a simple graph using an adjacency list representation:
+
+```javascript
+class Graph {
+  constructor() {
+    this.nodes = new Map(); // Map to store nodes and their connections
+  }
+
+  // Add a node to the graph
+  addNode(value) {
+    if (!this.nodes.has(value)) {
+      this.nodes.set(value, []);
+    }
+  }
+
+  // Add an undirected edge between two nodes
+  addEdge(node1, node2) {
+    if (this.nodes.has(node1) && this.nodes.has(node2)) {
+      this.nodes.get(node1).push(node2);
+      this.nodes.get(node2).push(node1); // For an undirected graph
+    }
+  }
+
+  // Get neighbors of a node
+  getNeighbors(node) {
+    if (this.nodes.has(node)) {
+      return this.nodes.get(node);
+    }
+    return [];
+  }
+
+  // Check if a node exists in the graph
+  hasNode(node) {
+    return this.nodes.has(node);
+  }
+}
+
+// Example usage:
+
+const myGraph = new Graph();
+
+myGraph.addNode(1);
+myGraph.addNode(2);
+myGraph.addNode(3);
+myGraph.addNode(4);
+
+myGraph.addEdge(1, 2);
+myGraph.addEdge(2, 3);
+myGraph.addEdge(3, 4);
+myGraph.addEdge(4, 1);
+
+console.log("Neighbors of node 1:", myGraph.getNeighbors(1)); // Output: [2, 4]
+console.log("Neighbors of node 3:", myGraph.getNeighbors(3)); // Output: [2, 4]
+console.log("Does node 5 exist?", myGraph.hasNode(5)); // Output: false
+```
+
+In this example:
+
+- The `Graph` class represents an undirected graph.
+- The `addNode` method adds a node to the graph by creating an entry in the `nodes` Map.
+- The `addEdge` method adds an undirected edge between two nodes by updating the adjacency lists of both nodes.
+- The `getNeighbors` method returns the neighbors of a given node.
+- The `hasNode` method checks if a node exists in the graph.
+
+> You can further extend this implementation to support directed graphs, weighted edges, and more advanced graph algorithms depending on your specific use case. This example provides a basic foundation for working with graphs in JavaScript using an adjacency list representation.
